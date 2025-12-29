@@ -13,3 +13,7 @@ build/
 
 # Env files
 .env
+
+# Local database
+*.db
+*.sqlite3

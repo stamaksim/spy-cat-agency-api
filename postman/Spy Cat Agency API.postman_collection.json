@@ -1,0 +1,424 @@
+{
+	"info": {
+		"_postman_id": "c9777455-3cab-469a-8e3b-c86c87aa3b25",
+		"name": "Spy Cat Agency API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49319360",
+		"_collection_link": "https://stamaksim1986-7148417.postman.co/workspace/%25D0%259C%25D0%25B0%25D0%25BA%25D1%2581%25D0%25B8%25D0%25BC-%25D0%25A1%25D1%2582%25D0%25B0%25D1%2585%25D0%25BE%25D0%25B2%25D1%2581%25D0%25BA%25D0%25B8%25D0%25B9's-Workspace~2971db6e-4efa-4e51-8517-e0910094cc0a/collection/49319360-c9777455-3cab-469a-8e3b-c86c87aa3b25?action=share&source=collection_link&creator=49319360"
+	},
+	"item": [
+		{
+			"name": "Helth",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Cat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"cat_id\", pm.response.json().id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Zevs\",\n  \"years_of_experience\": 3,\n  \"breed\": \"Abyssinian\",\n  \"salary\": 2500\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/cats",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"cats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Mission",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"targets\": [\n    { \"name\": \"Jessica\", \"country\": \"Finland\", \"notes\": \"Start observing.\" },\n    { \"name\": \"Luigy\", \"country\": \"Italy\", \"notes\": \"Collect evidence.\" }\n  ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/missions",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Cat to Mission",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}/assign/{{cat_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}",
+						"assign",
+						"{{cat_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Target Notes",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"notes\": \"New intel: meeting at 18:00.\" }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}/targets/{{target_id_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}",
+						"targets",
+						"{{target_id_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Complete Target 1",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"complete\": true }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}/targets/{{target_id_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}",
+						"targets",
+						"{{target_id_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Notes After Complete",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Notes are frozen\", () => pm.response.to.have.status(409));",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"notes\": \"should be frozen\" }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}/targets/{{target_id_1}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}",
+						"targets",
+						"{{target_id_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Complete Target 2",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"complete\": true }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}/targets/{{target_id_2}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}",
+						"targets",
+						"{{target_id_2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Mission",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lists Cats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/cats",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"cats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/cats/{{cat_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"cats",
+						"{{cat_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Cat salary",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"salary\": 1700 }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Cat",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/cats/{{cat_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"cats",
+						"{{cat_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Assigned Mission",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/missions/{{mission_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{mission_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Unassigned Mission",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"unassigned_mission_id\", pm.response.json().id);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"targets\": [\n    { \"name\": \"Temp\", \"country\": \"Latvia\", \"notes\": \"Temp.\" }\n  ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/missions",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Unassigned Mission",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/missions/{{unassigned_mission_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"missions",
+						"{{unassigned_mission_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
